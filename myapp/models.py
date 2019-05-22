@@ -26,7 +26,7 @@ class Product(models.Model):
     description = models.TextField(max_length=200, blank=True)
 
     def __str__(self):
-        return "%s" % self.name
+        return "{name} and {stock}".format(name=self.name,stock=self.stock)
 
     def __unicode__(self):
         return "%s" % self.name
