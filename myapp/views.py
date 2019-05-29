@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, render_to_response
 from .models import *
 from django.http import HttpResponse
+from django.conf.urls import handler404
+
 
 
 # Create your views here.
