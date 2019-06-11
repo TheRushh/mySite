@@ -1,5 +1,6 @@
 {% extends 'myapp/base.html' %}
-{% block myname %}Suhird {% endblock %}
+{% block title %}{{ category.name }}{% endblock %}
+{% block myname %}Grouup 4 {% endblock %}
 {% block body_block %}
 <h3>Warehouse for {{ category.name }} is at {{ category.warehouse }}</h3>
 {% if products %}

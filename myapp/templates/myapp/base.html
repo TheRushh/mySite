@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 {% load staticfiles %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}" />
-    <title>Online Store APP - {% block title %}Welcome!{% endblock %}</title>
- </head>
+        <title>Online Store APP - {% block title %}Welcome!{% endblock %}</title>
+    </head>
  <body>
  <div>
- <h1>{% block myhdg %}Hello {% block myname %}User{% endblock %} {% endblock %}</h1>
+ <h1 id="header">{% block myhdg %}Hello {% block myname %}User{% endblock %} {% endblock %}</h1>
+
  {% block body_block %}*** {% endblock %}
  </div>
- <hr />
+ <hr/>
  <div>
  <ul>
- <li class="hbar1"><a href="{% url 'about' %}">Find out about this site</a></li>
- <li class="hbar1"><a href = "{% url 'index' %}">Click here to return to main page</a><br/></li>
+     <li class="hbar1"><a href="{% url 'products' %}">List of products</a></li>
+     <li class="hbar1"><a href="{% url 'about' %}">Find out about this site</a></li>
+     <li class="hbar1"><a href = "{% url 'index' %}">Click here to return to main page</a><br/></li>
  </ul>
  </div>
  </body>
