@@ -19,7 +19,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     #Line below will show App level views when Site will be called
-    path('', include('myapp.urls')),
+    path('myapp/', include('myapp.urls')),
 ]
 
 # handler404 = myapp_views.error_404()
