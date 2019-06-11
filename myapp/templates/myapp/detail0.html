@@ -1,0 +1,20 @@
+<html>
+<head>
+    <title>Online Store App</title>
+</head>
+<body>
+<h3>Warehouse for {{ category.name }} is at {{ category.warehouse }}</h3>
+{% if products %}
+<p>Products for {{ category.name }}</p>
+<ol>
+    {% for prod in products %}
+    <li>{{ prod.name }}</li>
+    {% endfor %}
+</ol>
+{% else %}
+<strong>No Product for {{ category.name }}</strong>
+{% endif %}
+<footer><a href="{% url 'about' %}">About Page</a></footer>
+<footer><a href="{% url 'index' %}">Home</a></footer>
+</body>
+</html>
