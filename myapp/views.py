@@ -31,9 +31,11 @@ def detail(request, cat_no):
 #     response.status_code = 404
 #     return response
 
+
 def products(request):
     prod_list = Product.objects.all().order_by('id')[:10]
     return render(request, 'myapp/products.html', {'prod_list':prod_list})
+
 
 def productdetail(request, prod_id):
     product: Product = Product.objects.get(pk=prod_id)
@@ -49,6 +51,7 @@ def productdetail(request, prod_id):
     else:
         form = InterestForm()
     return render(request, 'myapp/productdetail.html', {'product': product, 'form': form})
+
 
 def place_order(request):
     msg = ''

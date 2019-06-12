@@ -6,7 +6,7 @@
     <ol>
         {% for product in prod_list %}
             <li>
-                <a href="./{{ product.id }}"><p>{{ product.name }}</p></a>
+                <a href="{% url 'productdetail' product.id %}"><p>{{ product.name }}</p></a>
             </li>
         {% endfor %}
     </ol>

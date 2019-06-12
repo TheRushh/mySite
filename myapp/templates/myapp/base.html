@@ -8,13 +8,16 @@
         <title>Online Store APP - {% block title %}Welcome!{% endblock %}</title>
     </head>
  <body>
- <div>
- <h1 id="header">{% block myhdg %}Hello {% block myname %}User{% endblock %} {% endblock %}</h1>
+ <div class="jumbotron text-center">
+    <h1 id="header">{% block myhdg %}Hello {% block myname %}User{% endblock %} {% endblock %}</h1>
+    <p><a href="{% url 'index' %}">Go to main page</a></p>
+ </div>
 
+ <div class="container">K
  {% block body_block %}*** {% endblock %}
  </div>
  <hr/>
- <div>
+ <div class="page-footer">
  <ul>
      <li class="hbar1"><a href="{% url 'products' %}">List of products</a></li>
      <li class="hbar1"><a href="{% url 'about' %}">Find out about this site</a></li>
