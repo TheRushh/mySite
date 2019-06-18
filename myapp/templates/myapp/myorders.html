@@ -1,0 +1,37 @@
+{% extends 'myapp/base.html' %}
+{% block title %}Myorders{% endblock %}
+{% block body_block %}
+    {% if orders %}
+        <h3>Order(s) of {{ client }}</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>
+                        <strong>Product</strong>
+                    </td>
+                    <td>
+                        <strong>Quantity</strong>
+                    </td>
+                    <td>
+                        <strong>Date of order</strong>
+                    </td>
+                </tr>
+            </thead>
+            {% for order in orders %}
+                <tr>
+                    <td>
+                        {{ order.product.name }}
+                    </td>
+                    <td>
+                        {{ order.num_units }}
+                    </td>
+                    <td>
+                        {{ order.status_date }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>You have no orders</p>
+    {% endif %}
+{% endblock %}

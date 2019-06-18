@@ -1,6 +1,6 @@
 {% extends 'myapp/base.html' %}
 {% block title %}{{ category.name }}{% endblock %}
-{% block myname %}Grouup 4 {% endblock %}
+
 {% block body_block %}
 <h3>Warehouse for {{ category.name }} is at {{ category.warehouse }}</h3>
 {% if products %}
@@ -8,7 +8,7 @@
 <ol>
     {% for prod in products %}
     <li>
-        <a href="{% url 'productdetail' prod.id %}">
+        <a href="{% url 'myapp:productdetail' prod.id %}">
             <p>{{ prod.name }}</p>
         </a>
     </li>

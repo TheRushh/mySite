@@ -1,22 +1,73 @@
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
-
 from myapp.models import Product
 from .models import *
 from .forms import *
-from django.http import HttpResponse
+from django.urls import reverse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
+import pandas as pd
 
 
 # Create your views here.
 
+
+def user_login(request):
+    # print(request)
+    # print(request.session)
+    # print(request.session.keys())
+    if request.method == 'POST':
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        # print(username, password)
+        user = authenticate(username=username, password=password)
+        print(user)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                dt = datetime.datetime.now()
+                request.session['last_login'] = str(dt)
+                request.session.set_expiry(3600)
+                return HttpResponseRedirect(reverse('myapp:index'))
+            else:
+                return HttpResponse('Your account is disabled.')
+        else:
+            return HttpResponse('Invalid login details.')
+
+    else:
+        return render(request, 'myapp/login.html')
+
+
+@login_required
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('myapp:index'))
+
+
 def index(request):
+    msg = ''
+    if 'last_login' in request.session.keys():
+        last_login = pd.to_datetime(request.session.get('last_login'))
+        msg = last_login
+    else:
+        msg = 'Your last login was 1 hour ago'
     cat_list = Category.objects.all().order_by('id')[:10]
-    return render(request, 'myapp/index.html', {'cat_list': cat_list})
+    return render(request, 'myapp/index.html', {'cat_list': cat_list, 'msg': msg})
     # return render(request, 'index.html',{})
 
 
 def about(request):
     msg = 'This is an Online Store App'
-    return render(request, 'myapp/about.html', {'msg': msg})
+    # print(request.COOKIES)
+    if 'visits' not in request.COOKIES:
+        response = render(request, 'myapp/about.html', {'msg': msg, 'visits': 1})
+        response.set_cookie('visits', 1)
+    else:
+        visits = int(request.COOKIES['visits'])
+        visits += 1
+        response = render(request, 'myapp/about.html', {'msg': msg, 'visits': visits})
+        response.set_cookie('visits', visits)
+    return response
 
 
 def detail(request, cat_no):
@@ -34,7 +85,7 @@ def detail(request, cat_no):
 
 def products(request):
     prod_list = Product.objects.all().order_by('id')[:10]
-    return render(request, 'myapp/products.html', {'prod_list':prod_list})
+    return render(request, 'myapp/products.html', {'prod_list': prod_list})
 
 
 def productdetail(request, prod_id):
@@ -43,11 +94,11 @@ def productdetail(request, prod_id):
         form = InterestForm(request.POST)
         if form.is_valid():
             interested = form.cleaned_data['intersted']
-            print(interested)
+            # print(interested)
             if interested == '1':
                 product.interested += 1
                 product.save()
-            return redirect('index')
+            return redirect('myapp:index')
     else:
         form = InterestForm()
     return render(request, 'myapp/productdetail.html', {'product': product, 'form': form})
@@ -65,7 +116,22 @@ def place_order(request):
                 msg = 'Order Placed Successfully'
             else:
                 msg = 'We do not have sufficient stock to fill your order'
-            return render(request, 'myapp/order_response.html', {'msg':msg})
+            return render(request, 'myapp/order_response.html', {'msg': msg})
     else:
         form = OrderForm()
-    return render(request, 'myapp/placeorder.html', {'form':form, 'msg':msg, 'prod_list':prod_list})
+    return render(request, 'myapp/placeorder.html', {'form': form, 'msg': msg, 'prod_list':prod_list})
+
+
+def myorders(request):
+    user = request.user
+    if user.is_authenticated:
+        # print('myorder', user.username)
+        client = Client.objects.get(username=user.username)
+        if type(client) is Client:
+            orders = Order.objects.filter(client=client)
+            # print(orders)
+            return render(request, 'myapp/myorders.html', {'orders': orders, 'client':client})
+
+    else:
+        return HttpResponse('You are not authenticated')
+    return 0

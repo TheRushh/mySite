@@ -1,16 +1,15 @@
 {% extends 'myapp/base.html' %}
 {% block title %}Products{% endblock %}
-{% block myname %}Group 4 {% endblock %}
 {% block body_block %}
     <h2>List of Products</h2>
     <ol>
         {% for product in prod_list %}
             <li>
-                <a href="{% url 'productdetail' product.id %}"><p>{{ product.name }}</p></a>
+                <a href="{% url 'myapp:productdetail' product.id %}"><p>{{ product.name }}</p></a>
             </li>
         {% endfor %}
     </ol>
     <ul>
-    <li class="hbar1"><a href = "{% url 'placeorder' %}">Click here to place order</a><br/></li>
+    <li class="hbar1"><a href = "{% url 'myapp:placeorder' %}">Click here to place order</a><br/></li>
     </ul>
 {% endblock %}

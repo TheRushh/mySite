@@ -1,19 +1,18 @@
 {% extends 'myapp/base.html' %}
-{% block myname %}Group 4{% endblock %}
 {% block body_block %}
-{% if cat_list %}
-    <h2>List of Categories</h2>
-        <ol>
-            {% for cat in cat_list %}
-                <li>
-                    <a href="{% url 'detail' cat.pk %}">
-                        <p>{{ cat.name }}</p>
-                    </a>
-                </li>
-            {% endfor %}
-        </ol>
-    {% else %}
-        <strong>There is no available Categories!</strong>
+    {{ msg }}
+    {% if cat_list %}
+        <h2>List of Categories</h2>
+            <ol>
+                {% for cat in cat_list %}
+                    <li>
+                        <a href="{% url 'myapp:detail' cat.pk %}">
+                            <p>{{ cat.name }}</p>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <strong>There is no available Categories!</strong>
     {% endif %}
-
 {% endblock %}

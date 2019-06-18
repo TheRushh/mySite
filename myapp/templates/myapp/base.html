@@ -9,19 +9,24 @@
     </head>
  <body>
  <div class="jumbotron text-center">
-    <h1 id="header">{% block myhdg %}Hello {% block myname %}User{% endblock %} {% endblock %}</h1>
-    <p><a href="{% url 'index' %}">Go to main page</a></p>
+    <h1 id="header">{% block myhdg %}Hello {{ request.user.first_name }} {% endblock %}</h1>
+    <p><a href="{% url 'myapp:index' %}">Go to main page</a> |
+        <a href="{% url 'myapp:myorders' %}">My orders</a> |
+        <a href="{% url 'myapp:user_login' %}">Login</a> |
+        <a href="{% url 'myapp:user_logout' %}">Logout</a></p>
+
+
  </div>
 
- <div class="container">K
+ <div class="container">
  {% block body_block %}*** {% endblock %}
  </div>
  <hr/>
- <div class="page-footer">
+ <div class="container">
  <ul>
-     <li class="hbar1"><a href="{% url 'products' %}">List of products</a></li>
-     <li class="hbar1"><a href="{% url 'about' %}">Find out about this site</a></li>
-     <li class="hbar1"><a href = "{% url 'index' %}">Click here to return to main page</a><br/></li>
+     <li class="hbar1"><a href="{% url 'myapp:products' %}">List of products</a></li>
+     <li class="hbar1"><a href="{% url 'myapp:about' %}">Find out about this site</a></li>
+     <li class="hbar1"><a href = "{% url 'myapp:index' %}">Click here to return to main page</a><br/></li>
  </ul>
  </div>
  </body>
