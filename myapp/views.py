@@ -40,11 +40,10 @@ def user_login(request):
 
 @login_required
 def user_logout(request):
-    last_login = pd.to_datetime(request.session.get('last_login'))
-    msg = last_login
-    print('logout ', msg)
     logout(request)
-    return HttpResponseRedirect(reverse('myapp:index'))
+    response = HttpResponseRedirect(reverse('myapp:index'))
+    response.set_cookie('last_activity', str(datetime.datetime.now()))
+    return response
 
 
 def index(request):
