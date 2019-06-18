@@ -21,7 +21,7 @@ def user_login(request):
         password = request.POST.get("password")
         # print(username, password)
         user = authenticate(username=username, password=password)
-        print(user)
+        # print(user)
         if user is not None:
             if user.is_active:
                 login(request, user)
@@ -40,19 +40,37 @@ def user_login(request):
 
 @login_required
 def user_logout(request):
+    last_login = pd.to_datetime(request.session.get('last_login'))
+    msg = last_login
+    print('logout ', msg)
     logout(request)
     return HttpResponseRedirect(reverse('myapp:index'))
 
 
 def index(request):
     msg = ''
+    flag = ''
+    now = datetime.datetime.now()
     if 'last_login' in request.session.keys():
         last_login = pd.to_datetime(request.session.get('last_login'))
+        flag = last_login
         msg = last_login
+    elif 'last_activity' in request.COOKIES:
+        last_activity = pd.to_datetime(request.COOKIES['last_activity'])
+        flag = last_activity
+        ago_hrs = (datetime.datetime.now()-last_activity).total_seconds()/3600
+        if ago_hrs < 1:
+            msg = last_activity
+        else:
+            msg = 'More than hour ago'
     else:
-        msg = 'Your last login was 1 hour ago'
+        msg = 'Last login more than one hour ago'
     cat_list = Category.objects.all().order_by('id')[:10]
-    return render(request, 'myapp/index.html', {'cat_list': cat_list, 'msg': msg})
+    print(msg)
+    response = render(request, 'myapp/index.html', {'cat_list': cat_list, 'msg': msg})
+    response.set_cookie('last_activity', flag)
+    print(request.COOKIES)
+    return response
     # return render(request, 'index.html',{})
 
 

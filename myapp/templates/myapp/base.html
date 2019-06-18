@@ -12,9 +12,12 @@
     <h1 id="header">{% block myhdg %}Hello {{ request.user.first_name }} {% endblock %}</h1>
     <p><a href="{% url 'myapp:index' %}">Go to main page</a> |
         <a href="{% url 'myapp:myorders' %}">My orders</a> |
-        <a href="{% url 'myapp:user_login' %}">Login</a> |
-        <a href="{% url 'myapp:user_logout' %}">Logout</a></p>
-
+        {% if not request.session.last_login %}
+            {{ request.session.last_login }}
+            <a href="{% url 'myapp:user_login' %}">Login</a>
+        {% else %}
+            <a href="{% url 'myapp:user_logout' %}">Logout</a></p>
+        {% endif %}
 
  </div>
 
