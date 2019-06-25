@@ -22,14 +22,16 @@
             </tr>
             <tr>
                 {% if product.available %}
-                <td>
-                    <strong>Available:</strong>
-                </td>
-                <td>
-                    {{ product.available }}
-                </td>
+                    <td>
+                        <strong>Available:</strong>
+                    </td>
+                    <td>
+                        {{ product.available }}
+                    </td>
                 {% else %}
-                    <strong>This product is not available</strong>
+                    <td colspan="2">
+                        <center><p class="error"><strong>This product is not available</strong></p></center>
+                    </td>
                 {% endif %}
             </tr>
         </tbody>

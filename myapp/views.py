@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
-from myapp.models import Product
 from .models import *
 from .forms import *
 from django.urls import reverse
@@ -30,10 +29,9 @@ def user_login(request):
                 request.session.set_expiry(3600)
                 return HttpResponseRedirect(reverse('myapp:index'))
             else:
-                return HttpResponse('Your account is disabled.')
+                return HttpResponse('<p>Your account is disabled.</p>')
         else:
-            return HttpResponse('Invalid login details.')
-
+            return HttpResponse('<p>Invalid login details.</p>')
     else:
         return render(request, 'myapp/login.html')
 
@@ -47,7 +45,6 @@ def user_logout(request):
 
 
 def index(request):
-    msg = ''
     flag = ''
     now = datetime.datetime.now()
     if 'last_login' in request.session.keys():
@@ -57,7 +54,7 @@ def index(request):
     elif 'last_activity' in request.COOKIES:
         last_activity = pd.to_datetime(request.COOKIES['last_activity'])
         flag = last_activity
-        ago_hrs = (datetime.datetime.now()-last_activity).total_seconds()/3600
+        ago_hrs = (now - last_activity).total_seconds()/3600
         if ago_hrs < 1:
             msg = last_activity
         else:
@@ -65,7 +62,7 @@ def index(request):
     else:
         msg = 'Last login more than one hour ago'
     cat_list = Category.objects.all().order_by('id')[:10]
-    print(msg)
+    # print(msg)
     response = render(request, 'myapp/index.html', {'cat_list': cat_list, 'msg': msg})
     response.set_cookie('last_activity', flag)
     print(request.COOKIES)
@@ -78,12 +75,12 @@ def about(request):
     # print(request.COOKIES)
     if 'visits' not in request.COOKIES:
         response = render(request, 'myapp/about.html', {'msg': msg, 'visits': 1})
-        response.set_cookie('visits', 1)
+        response.set_cookie('visits', 1, expires=5*60)
     else:
         visits = int(request.COOKIES['visits'])
         visits += 1
         response = render(request, 'myapp/about.html', {'msg': msg, 'visits': visits})
-        response.set_cookie('visits', visits)
+        response.set_cookie('visits', visits, expires=5*60)
     return response
 
 
@@ -110,7 +107,7 @@ def productdetail(request, prod_id):
     if request.method == 'POST':
         form = InterestForm(request.POST)
         if form.is_valid():
-            interested = form.cleaned_data['intersted']
+            interested = form.cleaned_data['interested']
             # print(interested)
             if interested == '1':
                 product.interested += 1
@@ -147,8 +144,6 @@ def myorders(request):
         if type(client) is Client:
             orders = Order.objects.filter(client=client)
             # print(orders)
-            return render(request, 'myapp/myorders.html', {'orders': orders, 'client':client})
-
+            return render(request, 'myapp/myorders.html', {'orders': orders, 'client': client})
     else:
         return HttpResponse('You are not authenticated')
-    return 0

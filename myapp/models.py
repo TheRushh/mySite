@@ -30,7 +30,7 @@ class Product(models.Model):
         self.stock += 100
 
     def __str__(self):
-        return "{name} (Stock: {stock})".format(name=self.name,stock=self.stock)
+        return "{name} (Stock: {stock})".format(name=self.name, stock=self.stock)
 
     def __unicode__(self):
         return "%s" % self.name
