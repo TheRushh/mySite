@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-{#{% load staticfiles %}#}
-{% load bootstrap4 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %}
+{% load staticfiles %}
+{#{% load bootstrap4 %}#}
+{#{% bootstrap_css %}#}
+{#{% bootstrap_javascript jquery='full' %}#}
 <html>
     <head>
         <title>Online Store APP - {% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
+        <script src="{% static 'js/bootstrap.js' %}"></script>
     </head>
  <body>
  <div class="jumbotron text-center">
     <h1 id="header">{% block myhdg %}Hello {{ request.user.first_name }} {% endblock %}</h1>
     <p><a href="{% url 'myapp:index' %}">Go to main page</a> |
-        <a href="{% url 'myapp:myorders' %}">My orders</a> |
         {% if not request.session.last_login %}
-            {{ request.session.last_login }}
-            <a href="{% url 'myapp:user_login' %}">Login</a>
+            <a href="{% url 'myapp:user_login' %}">Login</a> |
+            <a href="{% url 'myapp:user_signup' %}">Sign up</a>
         {% else %}
+            <a href="{% url 'myapp:myorders' %}">My orders</a> |
             <a href="{% url 'myapp:user_logout' %}">Logout</a></p>
         {% endif %}
 

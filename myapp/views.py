@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
+from django.contrib.auth.forms import UserCreationForm
+
 from .models import *
 from .forms import *
 from django.urls import reverse
@@ -9,6 +11,21 @@ import pandas as pd
 
 
 # Create your views here.
+
+
+def user_signup(request):
+    if request.method == 'POST':
+        print(request.POST)
+        form = SignupForm(request.POST)
+        # print(form.is_valid())
+        if form.is_valid():
+            # new_user = Client.objects.create_user(form.cleaned_data)
+            form.save()
+            return HttpResponseRedirect('myapp:index')
+        return render(request, 'myapp/signup.html', {'form': form})
+    else:
+        form = SignupForm()
+        return render(request, 'myapp/signup.html', {'form': form})
 
 
 def user_login(request):
@@ -27,7 +44,10 @@ def user_login(request):
                 dt = datetime.datetime.now()
                 request.session['last_login'] = str(dt)
                 request.session.set_expiry(3600)
-                return HttpResponseRedirect(reverse('myapp:index'))
+                if 'next' in request.POST:
+                    return redirect(request.POST.get('next'))
+                else:
+                    return HttpResponseRedirect(reverse('myapp:index'))
             else:
                 return HttpResponse('<p>Your account is disabled.</p>')
         else:
@@ -135,15 +155,18 @@ def place_order(request):
         form = OrderForm()
     return render(request, 'myapp/placeorder.html', {'form': form, 'msg': msg, 'prod_list':prod_list})
 
-
+@login_required(login_url="/myapp/login")
 def myorders(request):
     user = request.user
-    if user.is_authenticated:
-        # print('myorder', user.username)
-        client = Client.objects.get(username=user.username)
-        if type(client) is Client:
-            orders = Order.objects.filter(client=client)
-            # print(orders)
-            return render(request, 'myapp/myorders.html', {'orders': orders, 'client': client})
+    if str(user) is not 'AnonymousUser':
+        if user.is_authenticated:
+            # print('myorder', user.username)
+            client = Client.objects.get(username=user.username)
+            if type(client) is Client:
+                orders = Order.objects.filter(client=client)
+                # print(orders)
+                return render(request, 'myapp/myorders.html', {'orders': orders, 'client': client})
+        else:
+            return HttpResponse('You are not authenticated')
     else:
-        return HttpResponse('You are not authenticated')
+        return HttpResponseRedirect(reverse('myapp:user_login'))

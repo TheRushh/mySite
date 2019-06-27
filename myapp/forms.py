@@ -1,5 +1,23 @@
 from django import forms
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from .models import *
+
+class SignupForm(UserCreationForm):
+
+    class Meta:
+        model = Client
+        fields = [
+            'username',
+            'password1',
+            'password2',
+            'first_name',
+            'last_name',
+            'email',
+            'shipping_address',
+            'city',
+            'province',
+        ]
 
 
 class OrderForm(forms.ModelForm):
