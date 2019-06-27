@@ -21,7 +21,7 @@ def user_signup(request):
         if form.is_valid():
             # new_user = Client.objects.create_user(form.cleaned_data)
             form.save()
-            return HttpResponseRedirect('myapp:index')
+            return HttpResponseRedirect(reverse('myapp:index'))
         return render(request, 'myapp/signup.html', {'form': form})
     else:
         form = SignupForm()

@@ -5,15 +5,19 @@ from .models import *
 
 
 admin.site.register(Category)
-admin.site.register(Client)
+
 admin.site.register(Order)
+
 
 def restock(modeladmin, request, queryset):
     for product in queryset:
         product.stock = product.stock + 50
         product.save()
     return
+
+
 restock.short_description = 'Update stock'
+
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
@@ -27,4 +31,18 @@ class ProductAdmin(admin.ModelAdmin):
     )
     actions = [restock]
 
-admin.site.register(Product,ProductAdmin)
+
+admin.site.register(Product, ProductAdmin)
+
+
+class ClientAdmin(admin.ModelAdmin):
+    list_display = [
+        'username',
+        'first_name',
+        'last_name',
+        'city',
+        'get_interested'
+    ]
+
+
+admin.site.register(Client, ClientAdmin)
